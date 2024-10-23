@@ -7,7 +7,9 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 
 // 1) MIDDLEWARES
-app.use(morgan('dev')); // Logs basic information about the incoming http request
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev')); // Logs basic information about the incoming http request
+}
 
 app.use(express.json());
 

@@ -1,10 +1,10 @@
 const express = require('express');
 const contactController = require('../controllers/contactController');
+const authController = require('../controllers/authController');
+
 const router = express.Router();
 
 const {
-  checkID,
-  checkBody,
   getAllContacts,
   createContact,
   getContact,
@@ -12,9 +12,13 @@ const {
   deleteContact,
 } = contactController;
 
-router.param('id', checkID);
+const { protect } = authController;
 
-router.route('/').get(getAllContacts).post(checkBody, createContact);
-router.route('/:id').get(getContact).patch(updateContact).delete(deleteContact);
+router.route('/').get(protect, getAllContacts).post(protect, createContact);
+router
+  .route('/:id')
+  .get(protect, getContact)
+  .patch(protect, updateContact)
+  .delete(protect, deleteContact);
 
 module.exports = router;

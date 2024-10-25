@@ -6,12 +6,13 @@ const router = express.Router();
 
 const { getAllUsers, createUser, getUser, updateUser, deleteUser } =
   userController;
-const { signup, login } = authController;
+const { signup, login, logout } = authController;
 
 const { protect } = authController;
 
 router.post('/signup', signup);
 router.post('/login', login);
+router.get('/logout', logout);
 
 router.route('/').get(getAllUsers).post(createUser);
 router

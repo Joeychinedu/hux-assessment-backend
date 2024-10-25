@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -22,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 // Limit requests from same API
 const limiter = rateLimit({
-  max: 100,
+  max: 100000, // For testing purposes (This should be around 100)
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in an hour!',
 });
@@ -40,6 +41,14 @@ app.use(mongoSanitize());
 
 // Data sanitization against XSS
 app.use(xss());
+
+// Enable CORS for requests coming from the frontend (localhost:5173)
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // Allow this origin to make requests
+    credentials: true, // Allow cookies and credentials to be included in requests
+  }),
+);
 
 // Test middlware
 app.use((req, res, next) => {
